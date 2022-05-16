@@ -1,9 +1,9 @@
 package com.project.jwt.service;
 
-import com.project.jwt.dao.UserDao;
 import com.project.jwt.entity.JwtRequest;
 import com.project.jwt.entity.JwtResponse;
 import com.project.jwt.entity.User;
+import com.project.jwt.repository.UserRepository;
 import com.project.jwt.util.JwtUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class JwtService implements UserDetailsService {
     private JwtUtil jwtUtil;
 
     @Autowired
-    private UserDao userDao;
+    private UserRepository userDao;
 
     @Autowired
     private AuthenticationManager authenticationManager;

@@ -1,7 +1,7 @@
 package com.project.jwt.service;
 
-import com.project.jwt.dao.RoleDao;
 import com.project.jwt.entity.Role;
+import com.project.jwt.repository.RoleRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class RoleService {
 
     @Autowired
-    private RoleDao roleDao;
+    private RoleRepository roleDao;
 
     public Role createNewRole(Role role) {
         return roleDao.save(role);

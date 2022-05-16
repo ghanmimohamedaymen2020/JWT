@@ -1,4 +1,4 @@
-package com.project.jwt.dao;
+package com.project.jwt.repository;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.project.jwt.entity.Role;
 
 @Repository
-public interface RoleDao extends CrudRepository<Role, String> {
+public interface RoleRepository extends CrudRepository<Role, String> {
 
 }

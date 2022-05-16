@@ -9,8 +9,19 @@ public class Role {
     @Id
     private String roleName;
     private String roleDescription;
+    
+    public Role() {
+    	
+    }
+    
 
-    public String getRoleName() {
+    public Role(String roleName, String roleDescription) {
+		super();
+		this.roleName = roleName;
+		this.roleDescription = roleDescription;
+	}
+
+	public String getRoleName() {
         return roleName;
     }
 

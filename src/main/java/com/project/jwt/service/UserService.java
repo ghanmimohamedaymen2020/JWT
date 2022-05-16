@@ -1,25 +1,27 @@
 package com.project.jwt.service;
 
-import com.project.jwt.dao.RoleDao;
-import com.project.jwt.dao.UserDao;
 import com.project.jwt.entity.Role;
 import com.project.jwt.entity.User;
+import com.project.jwt.repository.RoleRepository;
+import com.project.jwt.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 @Service
 public class UserService {
 
     @Autowired
-    private UserDao userDao;
+    private UserRepository userRepository;
 
     @Autowired
-    private RoleDao roleDao;
+    private RoleRepository roleRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -29,12 +31,12 @@ public class UserService {
         Role adminRole = new Role();
         adminRole.setRoleName("Admin");
         adminRole.setRoleDescription("Admin role");
-        roleDao.save(adminRole);
+        roleRepository.save(adminRole);
 
         Role userRole = new Role();
         userRole.setRoleName("User");
         userRole.setRoleDescription("Default role for newly created record");
-        roleDao.save(userRole);
+        roleRepository.save(userRole);
 
         User adminUser = new User();
         adminUser.setUserName("admin123");
@@ -44,7 +46,7 @@ public class UserService {
         Set<Role> adminRoles = new HashSet<>();
         adminRoles.add(adminRole);
         adminUser.setRole(adminRoles);
-        userDao.save(adminUser);
+        userRepository.save(adminUser);
 
 //        User user = new User();
 //        user.setUserName("raj123");
@@ -58,16 +60,24 @@ public class UserService {
     }
 
     public User registerNewUser(User user) {
-        Role role = roleDao.findById("User").get();
+        Role role = roleRepository.findById("User").get();
         Set<Role> userRoles = new HashSet<>();
         userRoles.add(role);
         user.setRole(userRoles);
         user.setUserPassword(getEncodedPassword(user.getUserPassword()));
 
-        return userDao.save(user);
+        return userRepository.save(user);
     }
+    public List<User> getAllUser(){
+    	return userRepository.findAll();
+    }
+    
+ 
 
+	
     public String getEncodedPassword(String password) {
         return passwordEncoder.encode(password);
     }
+
+	
 }
