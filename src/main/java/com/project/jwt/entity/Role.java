@@ -2,8 +2,10 @@ package com.project.jwt.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "ROLE")
 public class Role {
 
     @Id

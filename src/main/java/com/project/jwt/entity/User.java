@@ -4,13 +4,23 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@Table(name = "usersat")
 public class User {
 
   
     @Id  
+    @Column(name = "userName")
     private String userName;
+    
+    @Column(name = "userFirstName")
+
     private String userFirstName;
+
+    @Column(name = "userLastName")
+
     private String userLastName;
+    @Column(name = "userPassword")
+
     private String userPassword;
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "USER_ROLE",
