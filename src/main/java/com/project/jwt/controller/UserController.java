@@ -15,7 +15,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import com.project.jwt.exception.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +30,7 @@ import javax.annotation.PostConstruct;
 
 @RestController
 @EnableWebSecurity
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200",methods = {RequestMethod.DELETE,RequestMethod.GET,RequestMethod.POST,RequestMethod.PUT})
 
 public class UserController {
 	
@@ -45,57 +49,57 @@ public class UserController {
     public User registerNewUser(@RequestBody User user) {
         return userService.registerNewUser(user);
     }
-    
-    @PreAuthorize("hasRole('Admin')")
-
-    public  List<User> getAllUser(){
-		return userService.getAllUser();
-		
-	}
-
-    @GetMapping({"/forAdmin"})
-    @PreAuthorize("hasRole('Admin')")
-    public String forAdmin(){
-        return "This URL is only accessible to the admin";
-    }
-
-    @GetMapping({"/forUser"})
-    @PreAuthorize("hasRole('User')")
-    public String forUser(){
-        return "This URL is only accessible to the user";
-    }
+   
     
     @GetMapping("/users")
 
     public  List<User>  getUsres(){
-		List<User> users = new ArrayList<>();
-	return	users = userService.getAllUser();
-           	
+	return userRepository.findAll();        	
     	
     }
-    @CrossOrigin(origins = "http://localhost:4200")
-    @PreAuthorize("hasRole('Admin')")
-	@DeleteMapping("/delateusers/{id}")
-	public ResponseEntity<Map<String, Boolean>> deleteUser(@PathVariable String id){
+    
+    
+    //@PreAuthorize("hasRole('Admin')")
+    @ResponseBody
+	@RequestMapping(value = "/users/{id}" , method = RequestMethod.DELETE)
+	public void  deleteUser(@PathVariable String id){
 		
-		User user = userRepository.findById(id).orElseThrow();
+		User user = userRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("user with this id is not found : "+ id));
 		
 		userRepository.delete(user);
 		Map<String,Boolean> response = new HashMap<>();
-		response.put("deleted",Boolean.TRUE);
-		return ResponseEntity.ok(response);
+		response.put("deleted",Boolean.TRUE); 
 		
 		
 	}
     
     
+	@GetMapping("/users/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable String id){
+		User user = userRepository.findById(id)
+				.orElseThrow(()->new ResourceNotFoundException("user with this id is not found please enter valid id "));
+		return ResponseEntity.ok(user) ;
+	}
+	
+	
   
-    
-	@PutMapping("/user/{id}")
-	public ResponseEntity<User> updateUser(String  id , User user){
+	@PutMapping("/users/{id}")
+	public ResponseEntity<User> updateUser(@PathVariable String id,@RequestBody User userDetaits){
+		User user = userRepository.findById(id)
+				.orElseThrow(()->new ResourceNotFoundException("user with this id is not found please enter valid id "));
 		
-		return userService.updateUser(id, user);
 		
+		if (userDetaits.getUserFirstName() !=null ){
+		user.setUserFirstName(userDetaits.getUserFirstName());}
+		if (userDetaits.getUserLastName()!=null ){
+		user.setUserLastName(userDetaits.getUserLastName());}
+		
+		
+		
+		User updateUser = userRepository.save(user);
+		
+		
+		return ResponseEntity.ok(updateUser) ;
 	}
 	
 	

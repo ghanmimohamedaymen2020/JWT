@@ -1,6 +1,10 @@
 package com.project.jwt.entity;
 
 import javax.persistence.*;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 import java.util.Set;
 
 @Entity
@@ -22,7 +26,7 @@ public class User {
     @Column(name = "userPassword")
 
     private String userPassword;
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany( fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "USER_ROLE",
             joinColumns = {
                     @JoinColumn(name = "USER_ID")
@@ -31,6 +35,7 @@ public class User {
                     @JoinColumn(name = "ROLE_ID")
             }
     )
+
     private Set<Role> role;
 
     public String getUserName() {
